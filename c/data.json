@@ -1,0 +1,18 @@
+{
+  "seed": 8899962566774883052,
+  "version": "1.16.1",
+  "player": [-96, 64],
+  "structures": [
+    { "type": "bastion", "x": 176, "z": -272 },
+    { "type": "ruind_portal", "x": -1248, "z": -432 },
+    { "type": "ruind_portal", "x": -944, "z": 32 },
+    { "type": "ruind_portal", "x": -928, "z": 896 },
+    { "type": "ruind_portal", "x": -544, "z": -400 },
+    { "type": "ruind_portal", "x": -272, "z": 240 },
+    { "type": "ruind_portal", "x": -624, "z": 800 },
+    { "type": "ruind_portal", "x": 256, "z": -368 },
+    { "type": "ruind_portal", "x": 368, "z": 0 },
+    { "type": "ruind_portal", "x": 144, "z": 848 }, 
+    { "type": "break", "x": 0, "z": 0 }
+  ]
+}
