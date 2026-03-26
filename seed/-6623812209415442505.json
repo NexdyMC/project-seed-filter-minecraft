@@ -1,0 +1,29 @@
+{
+  "seed": -6623812209415442505,
+  "version": "1.16.1",
+  "spawn": [0, 0],
+  "structures": [
+		{"type": "Shipwreck", "x": 304, "z": -720},
+		{"type": "Shipwreck", "x": 272, "z": -144},
+		{"type": "Shipwreck", "x": 496, "z": -288},
+		{"type": "Shipwreck", "x": 688, "z": 304},
+		{"type": "Shipwreck", "x": 864, "z": -272},
+		{"type": "Shipwreck", "x": 1040, "z": 192},
+		{"type": "Shipwreck", "x": 960, "z": 464},
+		{"type": "Village", "x": -704, "z": 240},
+		{"type": "Village", "x": 368, "z": 288},
+		{"type": "Monument", "x": 208, "z": -304},
+		{"type": "Monument", "x": 1344, "z": 208},
+		{"type": "Bastion", "x": -208, "z": -288},
+		{"type": "Bastion", "x": -400, "z": 496},
+		{"type": "Bastion", "x": 32, "z": 336},
+		{"type": "Bastion", "x": 592, "z": 496},
+		{"type": "Fortress", "x": -160, "z": 176},
+		{"type": "Fortress", "x": 304, "z": -128},
+		{"type": "Fortress", "x": 96, "z": 736},
+		{"type": "Fortress", "x": 464, "z": -368},
+		{"type": "Fortress", "x": 448, "z": 80},
+		{"type": "break", "x": 0, "z": 0}
+  ],
+  "biomes": "seed/-6623812209415442505.bin"
+}
