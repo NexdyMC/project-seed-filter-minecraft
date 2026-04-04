@@ -1,5 +1,5 @@
 /* 
-gcc fungsi.c cubiomes/libcubiomes.a -o fungsi && fungsi 
+gcc fungsi.c cubiomes/libcubiomes.a -o fungsi && fungsi 1234567890
 
 membuat fungsi untuk mencari structure
 selesai
@@ -22,11 +22,17 @@ typedef struct {
     char type[20];
     int x;
     int z;
-} Data;
+} list_structure;
 
+typedef struct {
+    char type[20];
+    int x;
+    int z;
+} list_biome;
 
+/// === metode File === ///
 // location structure
-const char* LocationStructure(FILE *fp, long long seed, int mc, int StructureType, char *type, int radius, int dimension ) 
+const char* LocationStructureJson(FILE *fp, long long seed, int mc, int StructureType, char *type, int radius, int dimension ) 
 {
     Generator g;
     Pos spawn = getSpawn(&g);
@@ -50,14 +56,46 @@ const char* LocationStructure(FILE *fp, long long seed, int mc, int StructureTyp
     }
 }
 
-const char* LocationBiome(FILE *fp, long long seed, int mc, int BiomeType, char *type, int radius, int dimension ) 
+const char* LocationStructureBin(FILE *file, long long seed, int mc, int StructureType, char *type, int radius, int dimension ) 
+{
+    Generator g;
+    Pos spawn = getSpawn(&g);
+    setupGenerator(&g, mc, 0);
+    applySeed(&g, dimension, seed);
+
+    list_structure res;
+
+    for (int rx = -radius; rx <= radius; rx++)
+    {
+        for (int rz = -radius; rz <= radius; rz++)
+        {
+            Pos p;
+
+            if (getStructurePos(StructureType, mc, seed, rx, rz, &p))
+            {
+                if (isViableStructurePos(StructureType, &g, p.x, p.z, 0))
+                {
+                    // printf("%s at (%d, %d)\n", type, p.x, p.z);
+                    // fprintf(fp, "\t\t{\"type\": \"%s\", \"x\": %d, \"z\": %d},\n", type, p.x, p.z);
+                    strcpy(res.type, type); 
+                    res.x =  p.x;
+                    res.z =  p.z;
+
+                    fwrite(&res, sizeof(list_structure), 1, file);
+                }
+            }
+        }
+    }
+}
+
+const char* LocationBiomeBin(FILE *file, long long seed, int mc, int BiomeType, char *type, int radius, int dimension ) 
 {   
     Generator g;
     setupGenerator(&g, mc, 0);
     applySeed(&g, dimension, seed);
-    printf("Mencari biome %s dalam radius %d block...\n", type,radius);
+    printf("Mencari biome %s dalam radius %d block...\n", type, radius);
 
-    Data res;
+    list_biome res;
 
     for (int X = -radius; X <= radius; X += 16)
     {
@@ -73,7 +111,49 @@ const char* LocationBiome(FILE *fp, long long seed, int mc, int BiomeType, char 
                 res.x = X;
                 res.z = Z;
 
-                fwrite(&res, sizeof(Data), 1, fp); // ✅ BENAR
+                fwrite(&res, sizeof(list_biome), 1, file); // ✅ BENAR
+            }
+        }
+    }
+}
+
+typedef struct {
+    char nama[20];
+    int x;
+    int z;
+} Structure;
+
+#define MAX_DATA 1000
+
+int CountStructure = 0;k 
+
+Structure Bmaps[MAX_DATA];
+
+/// === metode array map === ///
+const char LocationStructureMap(Structure, long long seed, int mc, int StructureType, char *type, int radius, int dimension ) 
+{
+    Generator g;
+    Pos spawn = getSpawn(&g);
+    setupGenerator(&g, mc, 0);
+    applySeed(&g, dimension, seed);
+
+    for (int rx = -radius; rx <= radius; rx++)
+    {
+        for (int rz = -radius; rz <= radius; rz++)
+        {
+            Pos p;
+            if (getStructurePos(StructureType, mc, seed, rx, rz, &p))
+            {
+                if (isViableStructurePos(StructureType, &g, p.x, p.z, 0))
+                {
+                    printf("%s at (%d, %d)\n", type, p.x, p.z);
+    
+                    strcpy(Bmap[CountStructure].nama, type);
+                    Bmaps[CountStructure].x = p.x;
+                    Bmaps[CountStructure].z = p.z;
+                    CountStructure++;
+
+                }
             }
         }
     }
@@ -89,40 +169,42 @@ int main(int argc, char *argv[]) {
 
     // === create file json === //
     char FileJsonName[100];
-    sprintf(FileJsonName, "seed/%lld.json", seed);
-    FILE *cjson = fopen(FileJsonName, "w");
+    sprintf(FileJsonName, "seed/structures/s%lld.bin", seed);
+    FILE *structureBin = fopen(FileJsonName, "w");
     
     // === create file bat === //
     char FileBinName[100];
-    sprintf(FileBinName, "seed/%lld.bin", seed);
-    FILE *cbin = fopen(FileBinName, "wb");
+    sprintf(FileBinName, "seed/biomes/b%lld.bin", seed);
+    FILE *biomeBin = fopen(FileBinName, "wb");
 
-
+    
+    
     // ===== Write JSON ===== //
-    fprintf(cjson, "{\n");
-    fprintf(cjson, "  \"seed\": %lld,\n", seed);
-    fprintf(cjson, "  \"version\": \"1.16.1\",\n");
-    fprintf(cjson, "  \"spawn\": [%d, %d],\n", getSpawn(&g).x, getSpawn(&g).z);
-    
-    fprintf(cjson, "  \"structures\": [\n");
-    LocationStructure(cjson, seed, mc, Treasure, "Treasure", 16, DIM_OVERWORLD);
-    LocationStructure(cjson, seed, mc, Shipwreck, "Shipwreck", 2, DIM_OVERWORLD);
-    LocationStructure(cjson, seed, mc, Village, "Village", 2, DIM_OVERWORLD);
-    LocationStructure(cjson, seed, mc, Monument, "Monument", 2, DIM_OVERWORLD);
-    LocationStructure(cjson, seed, mc, Bastion, "Bastion", 1, DIM_NETHER);
-    LocationStructure(cjson, seed, mc, Fortress, "Fortress", 1, DIM_NETHER);
-    fprintf(cjson, "\t\t{\"type\": \"break\", \"x\": 0, \"z\": 0}\n");
-    fprintf(cjson, "  ],\n");
-    
-    LocationBiome(cbin, seed, mc, ocean, "Ocean", 512, DIM_OVERWORLD);
-    LocationBiome(cbin, seed, mc, plains, "Plains", 512, DIM_OVERWORLD);
-    fprintf(cjson, "  \"biomes\": \"seed/%lld.bin\"\n", seed);
+
+    // LocationStructureBin(structureBin, seed, mc, Village, "Village", 2, DIM_OVERWORLD);
+    // LocationStructureBin(structureBin, seed, mc, Treasure, "Treasure", 16, DIM_OVERWORLD);
+    // LocationStructureBin(structureBin, seed, mc, Shipwreck, "Shipwreck", 2, DIM_OVERWORLD);
+    // LocationStructureBin(structureBin, seed, mc, Bastion, "Bastion", 2, DIM_NETHER);
+    // LocationStructureBin(structureBin, seed, mc, Fortress, "Fortress", 2, DIM_NETHER);
+
+    LocationStructureMap(seed, mc, Village, "Village", 2, DIM_OVERWORLD);
+
+    // LocationBiomeBin(biomeBin, seed, mc, ocean, "Ocean", 512, DIM_OVERWORLD);
+    // LocationBiomeBin(biomeBin, seed, mc, plains, "Plains", 512, DIM_OVERWORLD);
 
 
     // === penutup code === //
-    fprintf(cjson, "}\n");
-    fclose(cbin);
-    fclose(cjson);
+    fclose(structureBin);
+
+    fclose(biomeBin);
+
+    // === validasi jarak === ///
+    
+    // === tampilkan output === //
+    for (int i = 0; i < CountStructure; i++) {
+        printf("%d. Nama: %s\n", i, Bmaps[i].nama);
+    }
+
     
     clock_t end = clock();
     double waktu = (double)(end - start) / CLOCKS_PER_SEC;  
