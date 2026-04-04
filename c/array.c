@@ -3,9 +3,6 @@
 
 #define MAX_DATA 100
 
-typedef struct {
-    char nama[20];
-} MapBiome;
 
 
 MapBiome Bmaps[MAX_DATA];

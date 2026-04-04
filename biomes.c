@@ -1,4 +1,6 @@
-// gcc biomes.c cubiomes/libcubiomes.a -o biomes && biomes 8899962566774883052 ocean
+/* 
+gcc biomes.c cubiomes/libcubiomes.a -o biomes && biomes 8899962566774883052 ocean
+*/
 
 #include <stdio.h>
 #include <stdlib.h>

@@ -118,9 +118,6 @@ int main(int argc, char *argv[]) {
     LocationBiome(cbin, seed, mc, plains, "Plains", 512, DIM_OVERWORLD);
     fprintf(cjson, "  \"biomes\": \"seed/%lld.bin\"\n", seed);
 
-    
-    // fprintf(cjson, "\t\t{\"type\": \"break\", \"x\": 0, \"z\": 0}\n");
-    // fprintf(cjson, "  ]\n");
 
     // === penutup code === //
     fprintf(cjson, "}\n");

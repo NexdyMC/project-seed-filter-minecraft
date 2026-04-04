@@ -1,3 +1,4 @@
+//  gcc main.c -o main  && main
 #include <stdio.h>
 #include <string.h>
 
@@ -5,10 +6,10 @@
 
 typedef struct {
     char nama[20];
-} MapBiome;
+} Structure;
 
 
-MapBiome Bmaps[MAX_DATA];
+Structure Bmaps[MAX_DATA];
 
 
 int main(int argc, char *argv[]) 
@@ -29,6 +30,7 @@ int main(int argc, char *argv[])
     count++;
     strcpy(Bmaps[count].nama, "Treasure");
     count++;
+    
 
 
     for (int i = 0; i < 5; i++)

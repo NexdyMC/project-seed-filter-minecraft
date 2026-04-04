@@ -99,7 +99,3 @@ int main(int argc, char *argv[]) {
     }
     return 0;
 }
-
-// 1220 9308 4547 4575 780 seed
-// 1220930845474575780 seed 
-
